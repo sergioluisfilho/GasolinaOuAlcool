@@ -8,6 +8,36 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   TextEditingController _controllerAlcool = new TextEditingController();
   TextEditingController _controllerGasolina = new TextEditingController();
+  String _textoResultado = "";
+
+  void _calcular() {
+    double precoAlcool = double.tryParse(_controllerAlcool.text);
+    double precoGasolina = double.tryParse(_controllerGasolina.text);
+
+    if (precoAlcool == null || precoGasolina == null) {
+      setState(() {
+        _textoResultado =
+            "Digite números utilizando o '.' (ponto) para separar";
+      });
+    } else {
+      if ((precoAlcool / precoGasolina >= 0.7)) {
+        setState(() {
+          _textoResultado = "Melhor abastecer com Gasolina";
+        });
+      } else {
+        setState(() {
+          _textoResultado = "Melhor abastecer com Ácool";
+        });
+      }
+
+      _limparCampos();
+    }
+  }
+
+  void _limparCampos() {
+    _controllerGasolina.text = "";
+    _controllerAlcool.text = "";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +80,11 @@ class _HomeState extends State<Home> {
                       textColor: Colors.white,
                       padding: EdgeInsets.all(15),
                       child: Text("Calcular", style: TextStyle(fontSize: 20)),
-                      onPressed: () {})),
+                      onPressed: _calcular)),
               Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: Text(
-                  "Resultado",
+                  _textoResultado,
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
